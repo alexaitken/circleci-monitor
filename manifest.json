@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+
+  "name": "Cicleci Monitor",
+  "description": "Monitors build status on circleci",
+  "version": "1.0",
+  "browser_action": {
+    "default_icon": "images/starting.png",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": [
+      "bower_components/zepto/zepto.js",
+      "bower_components/underscore/underscore.js",
+      "bower_components/backbone/backbone.js",
+      "models.js",
+      "app.js"
+    ]
+  },
+  "permissions": [
+    "https://circleci.com/*"
+  ]
+
+}
