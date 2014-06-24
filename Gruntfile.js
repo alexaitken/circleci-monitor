@@ -9,8 +9,14 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      files: '<config:lint.files>',
-      tasks: 'lint'
+      js: {
+        files: '<config:lint.files>',
+        tasks: 'lint'
+      },
+      sass: {
+        files: 'stylesheets/*.scss',
+        tasks: 'sass'
+      }
     },
 
     jshint: {
@@ -54,6 +60,7 @@ module.exports = function(grunt) {
   });
 
   // Default task.
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
