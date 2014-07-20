@@ -27,6 +27,9 @@ Branch = Backbone.Model.extend({
 
 Branches = Backbone.Collection.extend({
   model: Branch,
+  comparator: function(branch) {
+    return branch.get('projectURL') + '/' + branch.get('name');
+  },
 
   url: function() {
     return 'https://circleci.com/api/v1/projects'

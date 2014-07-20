@@ -11,7 +11,7 @@ BranchView = Marionette.ItemView.extend({
   },
 
   template: function(data) {
-    return decodeURIComponent(data.name);
+    return data.projectUrl + '<br/>' + decodeURIComponent(data.name);
   },
 
   openBuild: function(e) {
