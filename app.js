@@ -26,7 +26,7 @@ var CircleciMonitor = {
   },
 
   showProjects: function() {
-    chrome.browserAction.setBadgeText({ text: '' + this.branches.size() });
+    chrome.browserAction.setBadgeText({ text: '' + this.branches.branchCount() });
 
     var iconName = this.icons[this.branches.focusedBuild().status()] || this.icons.other;
     chrome.browserAction.setIcon({ path: 'images/favicon-' + iconName + '.ico' });

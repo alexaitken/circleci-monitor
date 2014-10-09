@@ -12,11 +12,16 @@ Branch = Backbone.Model.extend({
   },
 
   recentBuild: function() {
+    result = null;
     if (this.get('running_builds').length > 0) {
-      return _.first(this.get('running_builds'));
+      result = _.first(this.get('running_builds'));
     } else {
-      return _.first(this.get('recent_builds'));
+      result = _.first(this.get('recent_builds'));
     }
+    if (this.get('name') === 'master') {
+      result.added_at = new Date(0);
+    }
+    return result;
   },
 
   status: function() {
@@ -65,7 +70,17 @@ Branches = Backbone.Collection.extend({
 
   branchesThatMatter: function(branch) {
     var username = this.user.get('login');
-    return branch.name !== 'master' && _.contains(branch.pusher_logins, username);
+    return branch.name == 'master' || _.contains(branch.pusher_logins, username);
+  },
+
+  branchCount: function() {
+    return this.reduce(function(count, build) {
+      if (build.get('name') === 'master') {
+        return count;
+      } else {
+        return count + 1;
+      }
+    }, 0);
   }
 
 });
