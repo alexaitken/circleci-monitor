@@ -25,6 +25,10 @@ var CircleciMonitor = {
     this.user.fetch();
   },
 
+  retry: function() {
+    this.user.fetch();
+  },
+
   showProjects: function() {
     chrome.browserAction.setBadgeText({ text: '' + this.branches.branchCount() });
 

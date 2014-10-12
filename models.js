@@ -1,5 +1,9 @@
 User = Backbone.Model.extend({
-  url: 'https://circleci.com/api/v1/me'
+  url: 'https://circleci.com/api/v1/me',
+
+  isLoaded: function() {
+    return this.get('login') !== undefined;
+  }
 });
 
 Branch = Backbone.Model.extend({
