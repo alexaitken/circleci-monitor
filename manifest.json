@@ -3,7 +3,7 @@
 
   "name": "Cicleci Monitor",
   "description": "Monitors build status on circleci",
-  "version": "1.2",
+  "version": "1.2.1",
   "browser_action": {
     "default_icon": "images/starting.png",
     "default_popup": "popup.html"
