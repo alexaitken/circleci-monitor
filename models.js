@@ -28,6 +28,10 @@ Branch = Backbone.Model.extend({
     return result;
   },
 
+  branchOrder: function() {
+    return this.get('projectUrl') + '_' + this.recentBuildNumber();
+  },
+
   status: function() {
     return this.recentBuild().status;
   }
@@ -37,7 +41,7 @@ Branch = Backbone.Model.extend({
 Branches = Backbone.Collection.extend({
   model: Branch,
   comparator: function(branch) {
-    return branch.get('projectURL') + '/' + branch.get('name');
+    return branch.branchOrder();
   },
 
   url: function() {

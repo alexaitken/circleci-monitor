@@ -51,6 +51,7 @@ ErrorView = Marionette.ItemView.extend({
 
 $(function () {
   if (CircleciMonitor.user.isLoaded()) {
+    CircleciMonitor.branches.sort();
     $('#branches').append(new BranchesView({ collection: CircleciMonitor.branches }).render().el);
   } else {
     $('#branches').append(new ErrorView().render().el);
