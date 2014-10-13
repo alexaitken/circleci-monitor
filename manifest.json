@@ -10,9 +10,9 @@
   },
   "background": {
     "scripts": [
-      "bower_components/zepto/zepto.js",
-      "bower_components/underscore/underscore.js",
-      "bower_components/backbone/backbone.js",
+      "vendor/zepto.js",
+      "vendor/underscore.js",
+      "vendor/backbone.js",
       "models.js",
       "app.js"
     ]
