@@ -35,7 +35,7 @@ ErrorView = Marionette.ItemView.extend({
   },
 
   template: function(data) {
-    return '<p class="error">You are not logged into circleci or have a connection problem</p>' +
+    return '<p class="error">You are not logged into CircleCI or have a connection problem</p>' +
       '<p><a id="login-to-circleci" href="http://circleci.com/">Log into circleci</a> or <button id="retry-authentication">Retry Authentication</button></p>';
   },
 
