@@ -1,5 +1,9 @@
 User = Backbone.Model.extend({
-  url: 'https://circleci.com/api/v1/me'
+  url: 'https://circleci.com/api/v1/me',
+
+  isLoaded: function() {
+    return this.get('login') !== undefined;
+  }
 });
 
 Branch = Backbone.Model.extend({
@@ -12,11 +16,20 @@ Branch = Backbone.Model.extend({
   },
 
   recentBuild: function() {
+    result = null;
     if (this.get('running_builds').length > 0) {
-      return _.first(this.get('running_builds'));
+      result = _.first(this.get('running_builds'));
     } else {
-      return _.first(this.get('recent_builds'));
+      result = _.first(this.get('recent_builds'));
     }
+    if (this.get('name') === 'master') {
+      result.added_at = new Date(0);
+    }
+    return result;
+  },
+
+  branchOrder: function() {
+    return this.get('projectUrl') + '_' + this.recentBuildNumber();
   },
 
   status: function() {
@@ -27,9 +40,12 @@ Branch = Backbone.Model.extend({
 
 Branches = Backbone.Collection.extend({
   model: Branch,
+  comparator: function(branch) {
+    return branch.branchOrder();
+  },
 
   url: function() {
-    return 'https://circleci.com/api/v1/projects'
+    return 'https://circleci.com/api/v1/projects';
   },
 
   initialize: function(models, options) {
@@ -62,7 +78,17 @@ Branches = Backbone.Collection.extend({
 
   branchesThatMatter: function(branch) {
     var username = this.user.get('login');
-    return branch.name !== 'master' && _.contains(branch.pusher_logins, username);
+    return branch.name == 'master' || _.contains(branch.pusher_logins, username);
+  },
+
+  branchCount: function() {
+    return this.reduce(function(count, build) {
+      if (build.get('name') === 'master') {
+        return count;
+      } else {
+        return count + 1;
+      }
+    }, 0);
   }
 
 });

@@ -9,8 +9,14 @@ module.exports = function(grunt) {
     },
 
     watch: {
-      files: '<config:lint.files>',
-      tasks: 'lint'
+      js: {
+        files: '<config:lint.files>',
+        tasks: 'lint'
+      },
+      sass: {
+        files: 'stylesheets/*.scss',
+        tasks: 'sass'
+      }
     },
 
     jshint: {
@@ -41,11 +47,26 @@ module.exports = function(grunt) {
           ext: '.css'
         }]
       }
-    }
+    },
+    copy: {
+      files: {
+        cwd: './',
+        src: ['vendor/*', 'images/*', 'manifest.json', '*.js', 'stylesheets/*.css', '*.html'],           // copy all files and subfolders
+        dest: 'dist/',
+        expand: true
+      }
+    },
+    clean: ["dist", "stylesheets/*.css"]
   });
 
   // Default task.
+  grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-copy');
+
   grunt.registerTask('default', ['lint', 'sass']);
+
+  grunt.registerTask('dist', ['clean', 'sass', 'copy']);
 
   };

@@ -19,17 +19,31 @@ var CircleciMonitor = {
     this.user.on('change', function() { this.branches.fetch({reset: true}); }, this);
 
     this.user.on('error', function() {
-      chrome.browserAction.setIcon({ path: 'images/warning.png' });
+      chrome.browserAction.setIcon({
+        path: {
+          '19': 'images/warning-19.png',
+          '38': 'images/warning-38.png'
+        }
+      });
     });
 
     this.user.fetch();
   },
 
+  retry: function() {
+    this.user.fetch();
+  },
+
   showProjects: function() {
-    chrome.browserAction.setBadgeText({ text: '' + this.branches.size() });
+    chrome.browserAction.setBadgeText({ text: '' + this.branches.branchCount() });
 
     var iconName = this.icons[this.branches.focusedBuild().status()] || this.icons.other;
-    chrome.browserAction.setIcon({ path: 'images/favicon-' + iconName + '.ico' });
+    chrome.browserAction.setIcon({
+      path: {
+        '19':'images/' + iconName + '-19.png',
+        '38':'images/' + iconName + '-38.png'
+      }
+    });
 
     this.delayReload();
   },
