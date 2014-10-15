@@ -20,7 +20,7 @@ var CircleciMonitor = {
 
     this.user.on('error', function() {
       chrome.browserAction.setIcon({
-        imageData: {
+        path: {
           '19': 'images/warning-19.png',
           '38': 'images/warning-38.png'
         }
@@ -39,7 +39,7 @@ var CircleciMonitor = {
 
     var iconName = this.icons[this.branches.focusedBuild().status()] || this.icons.other;
     chrome.browserAction.setIcon({
-      imageData: {
+      path: {
         '19':'images/' + iconName + '-19.png',
         '38':'images/' + iconName + '-38.png'
       }
