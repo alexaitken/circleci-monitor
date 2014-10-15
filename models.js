@@ -45,7 +45,7 @@ Branches = Backbone.Collection.extend({
   },
 
   url: function() {
-    return 'https://circleci.com/api/v1/projects'
+    return 'https://circleci.com/api/v1/projects';
   },
 
   initialize: function(models, options) {
