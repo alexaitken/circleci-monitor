@@ -8,7 +8,8 @@
                  [cljs-ajax "0.3.3"]
                  [om "0.7.1"]]
 
-  :plugins [[lein-cljsbuild "1.0.4-SNAPSHOT"]]
+  :plugins [[lein-cljsbuild "1.0.4-SNAPSHOT"]
+            [lein-haml-sass "0.2.7-SNAPSHOT"]]
 
   :source-paths ["src"]
 
@@ -19,4 +20,8 @@
                 :output-to "om_tut.js"
                 :output-dir "out"
                 :optimizations :none
-                :source-map true}}]})
+                :source-map true}}]}
+
+  :scss {:src "stylesheets"
+    :output-directory "stylesheets"}
+)
