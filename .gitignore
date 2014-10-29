@@ -3,3 +3,6 @@ bower_components/
 stylesheets/*.css
 .sass-cache/
 dist
+out/*
+om_tut.js
+
