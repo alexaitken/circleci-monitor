@@ -2,6 +2,8 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [ajax.core :refer [GET POST]]
             [clojure.string :as string]
+            [om.core :as om :include-macros true]
+            [om.dom :as dom :include-macros true]
             [cljs.core.async :refer [chan <! >! timeout onto-chan]]))
 
 (def circle-ci-url "https://circleci.com/api/v1")
@@ -21,17 +23,35 @@
 (randomly-constantly branch-updates ["channel-one" "boo" "lakjsdf"] )
 
 (defn handler [response]
-    ;(swap! app-state assoc :current_branches ["error", "other"]))
-    )
+    (swap! app-state assoc :current_branches ["error", "other"]))
 
 (defn error-handler [{:keys [status status-text]}]
     (.log js/console (str "something bad happened: " status " " status-text)))
+
 (def browser-action (.-browserAction js/chrome))
 
 (add-watch app-state :watch-change (fn [key a old-val new-val]
     (. browser-action (setBadgeText (js-obj "text" (str (count (:current_branches new-val))))))
     (.log js/console (str "value changed " old-val " " (count new-val) "s " new-val ))))
-;(swap! app-state assoc :current_branches ["lkajsdf"])
+(swap! app-state assoc :current_branches ["lkajsdf"])
 (GET circle-ci-user-url {:handler handler :error-handler error-handler})
 
 (.log js/console (:current_branches @app-state))
+
+(defn contact-view [app owner]
+  (reify
+    om/IRender
+    (render [this]
+      (apply dom/ul nil
+        (map (fn [text]
+          (dom/li nil text))
+        (:current_branches app))))))
+
+(defn popup [root-node]
+  (.log js/console "attaching")
+  (om/root contact-view app-state
+     {:target root-node}))
+
+(defn shutdown-popup [root-node]
+  (.log js/console "detaching")
+  (om/detach-root root-node))
