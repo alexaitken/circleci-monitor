@@ -1,4 +1,4 @@
-(ns circleci-monitor.web)
+(ns circleci-monitor.popup.boostrap)
 
 (def background-page (js/chrome.extension.getBackgroundPage))
 (def background background-page.circleci-monitor.core)
