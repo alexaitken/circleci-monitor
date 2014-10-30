@@ -14,7 +14,7 @@
   "background": {
     "scripts": [
       "vendor/react.js",
-      "out/goog/base.js",
+      "out/background/goog/base.js",
       "circleci-monitor.js",
       "app.js"
     ]

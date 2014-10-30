@@ -1,1 +1,1 @@
-goog.require("circleci_monitor.popup.boostrap");
+goog.require("circleci_monitor.popup");

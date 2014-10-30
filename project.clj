@@ -16,12 +16,21 @@
 
   :cljsbuild {
     :builds [{:id "circleci-monitor"
-              :source-paths ["src"]
+              :source-paths ["src/background"]
               :compiler {
                 :output-to "circleci-monitor.js"
-                :output-dir "out"
+                :output-dir "out/background"
                 :optimizations :none
-                :source-map true}}]}
+                :closure-defines {"goog.json.USE_NATIVE_JSON" true}
+                :source-map :true
+                }}
+             {:id "circleci-monitor-pop"
+              :source-paths ["src/popup"]
+              :compiler {
+                :output-to "circleci-monitor-popup.js"
+                :output-dir "out/popup"
+                :optimizations :none
+                }}]}
 
   :scss {:src "stylesheets"
     :output-directory "stylesheets"}
