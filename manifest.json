@@ -15,7 +15,7 @@
     "scripts": [
       "vendor/react.js",
       "out/goog/base.js",
-      "om_tut.js",
+      "circleci-monitor.js",
       "app.js"
     ]
   },

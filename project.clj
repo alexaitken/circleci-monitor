@@ -15,10 +15,10 @@
   :source-paths ["src"]
 
   :cljsbuild {
-    :builds [{:id "om-tut"
+    :builds [{:id "circleci-monitor"
               :source-paths ["src"]
               :compiler {
-                :output-to "om_tut.js"
+                :output-to "circleci-monitor.js"
                 :output-dir "out"
                 :optimizations :none
                 :source-map true}}]}

@@ -1,4 +1,4 @@
-(ns om-tut.core
+(ns circleci-monitor.core
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require [ajax.core :refer [GET POST]]
             [clojure.string :as string]
@@ -31,12 +31,9 @@
 (def browser-action (.-browserAction js/chrome))
 
 (add-watch app-state :watch-change (fn [key a old-val new-val]
-    (. browser-action (setBadgeText (js-obj "text" (str (count (:current_branches new-val))))))
-    (.log js/console (str "value changed " old-val " " (count new-val) "s " new-val ))))
-(swap! app-state assoc :current_branches ["lkajsdf"])
-(GET circle-ci-user-url {:handler handler :error-handler error-handler})
+    (. browser-action (setBadgeText (js-obj "text" (str (count (:current_branches new-val))))))))
 
-(.log js/console (:current_branches @app-state))
+(GET circle-ci-user-url {:handler handler :error-handler error-handler})
 
 (defn contact-view [app owner]
   (reify

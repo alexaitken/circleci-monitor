@@ -1,1 +1,1 @@
-goog.require("om_tut.core");
+goog.require("circleci_monitor.core");

@@ -1,7 +1,7 @@
-(ns om-tut.web)
+(ns circleci-monitor.web)
 
 (def background-page (js/chrome.extension.getBackgroundPage))
-(def background background-page.om-tut.core)
+(def background background-page.circleci-monitor.core)
 
 (background.popup (. js/document (getElementById "app0")))
 
