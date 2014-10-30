@@ -9,7 +9,8 @@
                  [om "0.7.1"]]
 
   :plugins [[lein-cljsbuild "1.0.4-SNAPSHOT"]
-            [lein-haml-sass "0.2.7-SNAPSHOT"]]
+            [lein-haml-sass "0.2.7-SNAPSHOT"]
+            [lein-pdo "0.1.1"]]
 
   :source-paths ["src"]
 
