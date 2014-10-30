@@ -44,7 +44,7 @@
           (dom/li nil text))
         (:current_branches app))))))
 
-(defn popup [root-node]
+(defn start-popup [root-node]
   (.log js/console "attaching")
   (om/root contact-view app-state
      {:target root-node}))
