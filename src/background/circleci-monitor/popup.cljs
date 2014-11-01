@@ -1,7 +1,7 @@
 (ns circleci-monitor.view
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
-            [circleci-monitor.core :as core]))
+            [circleci-monitor.state :as state]))
 
 (defn contact-view [app owner]
   (reify
@@ -14,7 +14,7 @@
 
 (defn ^:export start-popup [root-node]
   (.log js/console "attaching")
-  (om/root contact-view core/app-state
+  (om/root contact-view state/app-state
      {:target root-node}))
 
 (defn ^:export shutdown-popup [root-node]
