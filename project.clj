@@ -6,6 +6,7 @@
                  [org.clojure/clojurescript "0.0-2311"]
                  [org.clojure/core.async "0.1.346.0-17112a-alpha"]
                  [cljs-ajax "0.3.3"]
+                 [com.cognitect/transit-cljs "0.8.188"]
                  [om "0.7.1"]]
 
   :plugins [[lein-cljsbuild "1.0.4-SNAPSHOT"]

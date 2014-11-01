@@ -10,7 +10,7 @@
       (apply dom/ul nil
         (map (fn [text]
           (dom/li nil text))
-        (:current_branches app))))))
+        (:current-branches app))))))
 
 (defn ^:export start-popup [root-node]
   (.log js/console "attaching")
