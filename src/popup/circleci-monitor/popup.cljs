@@ -1,7 +1,7 @@
-(ns circleci-monitor.popup)
+(ns circleci-monitor.popup
+  (:require [circleci-monitor.chrome :as chrome]))
 
-(def background-page (js/chrome.extension.getBackgroundPage))
-(def background background-page.circleci-monitor.view)
+(def background chrome/background-page.circleci-monitor.view)
 
 (background.start-popup (. js/document (getElementById "app0")))
 

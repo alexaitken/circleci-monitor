@@ -2,13 +2,12 @@
   (:require [circleci-monitor.requests :as requests]
             [circleci-monitor.state :as state]
             [circleci-monitor.view :as view]
+            [circleci-monitor.chrome :as chrome]
             [clojure.string :as string]))
-
-(def browser-action (.-browserAction js/chrome))
 
 (add-watch state/app-state :badge-icon-watch
   (fn [key a old-val new-val]
-    (. browser-action (setBadgeText (js-obj "text" (str (count (:current-branches new-val))))))))
+    (chrome/set-badge-text (str (count (:current-branches new-val))))))
 
 (add-watch state/app-state :start-loading-branches
   (fn [key state old-val new-val]
