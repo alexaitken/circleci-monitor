@@ -3,6 +3,7 @@ stylesheets/*.css
 dist
 out/*
 circleci-monitor.js
+circleci-monitor-test.js
 circleci-monitor-popup.js
 circleci-monitor.js.map
 target

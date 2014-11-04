@@ -11,6 +11,7 @@
 
   :plugins [[lein-cljsbuild "1.0.4-SNAPSHOT"]
             [lein-haml-sass "0.2.7-SNAPSHOT"]
+            [com.cemerick/clojurescript.test "0.3.1"]
             [lein-pdo "0.1.1"]]
 
   :source-paths ["src"]
@@ -21,9 +22,19 @@
               :compiler {
                 :output-to "circleci-monitor.js"
                 :output-dir "out/background"
+                :externs ["vendor/react.js"]
                 :optimizations :none
                 :closure-defines {"goog.json.USE_NATIVE_JSON" true}
                 :source-map :true
+                }}
+             {:id "circleci-monitor-test"
+              :source-paths ["src/background" "src/test"]
+              :compiler {
+                :output-to "circleci-monitor-test.js"
+                :output-dir "out/test"
+                :externs ["vendor/react.js"]
+                :optimizations :simple
+                :closure-warnings {:externs-validation :off}
                 }}
              {:id "circleci-monitor-pop"
               :source-paths ["src/popup"]
@@ -31,8 +42,11 @@
                 :output-to "circleci-monitor-popup.js"
                 :output-dir "out/popup"
                 :optimizations :none
-                }}]}
+                }}]
 
-  :scss {:src "stylesheets"
+    :test-commands {"unit-tests" ["phantomjs" :runner "out/test/goog/base.js" "circleci-monitor-test.js" "test-run.js"]}}
+
+  :scss {
+    :src "stylesheets"
     :output-directory "stylesheets"}
 )
