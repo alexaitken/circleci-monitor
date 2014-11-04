@@ -8,8 +8,8 @@
     om/IRender
     (render [this]
       (apply dom/ul nil
-        (map (fn [text]
-          (dom/li nil text))
+        (map (fn [branch]
+          (dom/li nil (:branch-name branch)))
         (:current-branches app))))))
 
 (defn ^:export start-popup [root-node]

@@ -4,19 +4,29 @@
             [circleci-monitor.branches :as b]))
 
 (deftest master-always-matters
-    (is (b/branch-matters?
-          "good-dev",
-          ["master",
-           {"pusher_logins" ["someone" "someoneelse"]}])))
+    (is (b/branch-matters? "good-dev",
+                           {:branch-name "master"
+                            :pusher-logins ["someone" "someoneelse"]})))
 
 (deftest branches-with-your-user-matter
-    (is (b/branch-matters?
-          "good-dev",
-          ["some-branch",
-           {"pusher_logins" ["someone" "good-dev" "someoneelse"]}])))
+    (is (b/branch-matters? "good-dev"
+                           {:branch-name "some-branch"
+                            :pusher-logins ["someone" "good-dev" "someoneelse"]})))
 
 (deftest branches-that-are-not-master-and-you-have-not-pushed-to-dont-matter
-    (is (not(b/branch-matters?
-          "good-dev",
-          ["some-branch",
-           {"pusher_logins" ["someone" "someoneelse"]}]))))
+    (is (not(b/branch-matters? "good-dev",
+                               {:branch-name "some-branch"
+                                :pusher-logins ["someone" "someoneelse"]}))))
+
+(deftest no-projects-results-in-no-branches
+  (is (= [{:branch-name "branch_123"
+           :pusher-logins ["login1", "login2"]
+           :reponame "repo1"
+           :username "Shopify"}]
+         (b/reduce-to-branches [{"branches" { "branch_123" { "pusher_logins" ["login1", "login2"] }}
+                                "reponame" "repo1"
+                                "username" "Shopify"}]))))
+
+
+
+
