@@ -3,11 +3,12 @@
             [circleci-monitor.state :as state]
             [circleci-monitor.view :as view]
             [circleci-monitor.chrome :as chrome]
+            [circleci-monitor.branches :as b]
             [clojure.string :as string]))
 
 (add-watch state/app-state :badge-icon-watch
   (fn [key a old-val new-val]
-    (chrome/set-badge-text (str (count (:current-branches new-val))))))
+    (chrome/set-badge-text (str (b/count-feature-branches (:current-branches new-val))))))
 
 (add-watch state/app-state :start-loading-branches
   (fn [key state old-val new-val]
@@ -17,4 +18,3 @@
       (requests/update-branches))))
 
 (requests/start-requests)
-

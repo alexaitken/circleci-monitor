@@ -17,6 +17,14 @@
                    (get project "branches")))
              projects)))
 
+(defn count-feature-branches [branches]
+  (count (feature-branches branches)))
+
+(defn feature-branches [branches]
+  (filter (fn [branch]
+            (not (= (:branch-name branch) "master")))
+          branches))
+
 (defn extract-branches [projects username]
   (def user-branch? (partial branch-matters? username))
   (filter user-branch? (reduce-to-branches projects)))
