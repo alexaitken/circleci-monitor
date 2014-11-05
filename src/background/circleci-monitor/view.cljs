@@ -13,11 +13,13 @@
     (render [this]
       (apply dom/ul nil
         (map (fn [branch]
-          (let [url (branch-url branch)]
-            (dom/li #js {:className (branches/last-build-status branch)
-                         :onClick #(chrome/open url)}
-                    (:branch-name branch))))
-        (:current-branches app))))))
+               (let [url (branch-url branch)]
+                 (dom/li #js {:className (branches/last-build-status branch)
+                              :onClick #(chrome/open url)}
+                         (str (:username branch) "/" (:reponame branch))
+                         (dom/br nil)
+                         (js/decodeURIComponent (:branch-name branch)))))
+             (:current-branches app))))))
 
 (defn ^:export start-popup [root-node]
   (.log js/console "attaching")
