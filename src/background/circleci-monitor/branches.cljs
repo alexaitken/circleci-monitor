@@ -25,7 +25,13 @@
   (filter user-branch? (reduce-to-branches projects)))
 
 (defn convert-branch [project branch]
-  {:branch-name (first branch)
-   :pusher-logins (get (second branch) "pusher_logins")
-   :reponame (get project "reponame")
-   :username (get project "username")})
+  (let [branch-details (second branch)]
+    {:branch-name (first branch)
+     :pusher-logins (get branch-details "pusher_logins")
+     :reponame (get project "reponame")
+     :username (get project "username")
+     :builds (take 5
+                   (concat (get branch-details "running_builds")
+                           (get branch-details "recent_builds")))}))
+(defn last-build-number [branch]
+  (get (first (:builds branch)) "build_num"))

@@ -2,9 +2,10 @@
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
             [circleci-monitor.chrome :as chrome]
+            [circleci-monitor.branches :as branches]
             [circleci-monitor.state :as state]))
 (defn branch-url [branch]
-  (str "https://circleci.com/gh/" (:username branch) "/" (:reponame branch)))
+  (str "https://circleci.com/gh/" (:username branch) "/" (:reponame branch) "/" (branches/last-build-number branch)))
 
 (defn contact-view [app owner]
   (reify

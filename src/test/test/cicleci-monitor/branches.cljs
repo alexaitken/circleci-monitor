@@ -21,12 +21,14 @@
 (deftest no-projects-results-in-no-branches
   (is (= [{:branch-name "branch_123"
            :pusher-logins ["login1" "login2"]
+           :builds []
            :reponame "repo1"
            :username "Shopify"}]
-         (b/reduce-to-branches [{"branches" { "branch_123" { "pusher_logins" ["login1", "login2"] }}
+         (b/reduce-to-branches [{"branches" {"branch_123" {"pusher_logins" ["login1", "login2"]
+                                                           "recent_builds" []
+                                                           "running_builds" []}}
                                 "reponame" "repo1"
                                 "username" "Shopify"}]))))
-
 
 (deftest feature-branches-removes-all-masters
   (let [feature-branch-1 { :branch_name "feature-branch-1" }]
