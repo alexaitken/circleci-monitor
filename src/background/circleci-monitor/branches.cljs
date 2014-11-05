@@ -6,16 +6,11 @@
       (some #(= username %)
             (:pusher-logins branch))))
 
-
 (defn reduce-to-branches [projects]
   (flatten (mapv (fn [project]
-             (mapv (fn [branch]
-                     {:branch-name (first branch)
-                      :pusher-logins (get (second branch) "pusher_logins")
-                      :reponame (get project "reponame")
-                      :username (get project "username")})
-                   (get project "branches")))
-             projects)))
+                   (def project-convert-branch (partial convert-branch project))
+                   (mapv project-convert-branch (get project "branches")))
+                 projects)))
 
 (defn count-feature-branches [branches]
   (count (feature-branches branches)))
@@ -28,3 +23,9 @@
 (defn extract-branches [projects username]
   (def user-branch? (partial branch-matters? username))
   (filter user-branch? (reduce-to-branches projects)))
+
+(defn convert-branch [project branch]
+  {:branch-name (first branch)
+   :pusher-logins (get (second branch) "pusher_logins")
+   :reponame (get project "reponame")
+   :username (get project "username")})
