@@ -33,5 +33,17 @@
      :builds (take 5
                    (concat (get branch-details "running_builds")
                            (get branch-details "recent_builds")))}))
+
+(defn last-build-status [branch]
+  (get (first (:builds branch)) "status"))
+
 (defn last-build-number [branch]
   (get (first (:builds branch)) "build_num"))
+
+(defn recent-branch-status [branches]
+  (last-build-status (first (order-branches branches))))
+
+(defn order-branches [branches]
+  (sort-by (fn [branch]
+             (get (first (:builds branch)) "added_at"))
+           branches))

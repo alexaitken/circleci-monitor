@@ -14,7 +14,8 @@
       (apply dom/ul nil
         (map (fn [branch]
           (let [url (branch-url branch)]
-            (dom/li #js {:onClick #(chrome/open url)}
+            (dom/li #js {:className (branches/last-build-status branch)
+                         :onClick #(chrome/open url)}
                     (:branch-name branch))))
         (:current-branches app))))))
 
