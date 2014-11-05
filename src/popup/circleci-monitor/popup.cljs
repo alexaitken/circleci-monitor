@@ -3,9 +3,9 @@
 
 (def background chrome/background-page.circleci-monitor.view)
 
-(background.start-popup (. js/document (getElementById "app0")))
+(background.start-popup (. js/document (getElementById "branches")))
 
 (defn shutdown []
-  (background.shutdown-popup (. js/document (getElementById "app0"))))
+  (background.shutdown-popup (. js/document (getElementById "branches"))))
 
 (js/addEventListener "unload" shutdown)

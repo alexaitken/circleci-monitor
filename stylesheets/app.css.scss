@@ -1,0 +1,53 @@
+$success-color: #229922;
+$running-color: #3a87ad;
+$stopped-color: #898989;
+$failed-color: #c13737;
+
+html { margin:0; }
+body {
+  margin:0;
+  min-width: 357px;
+  overflow-x: hidden;
+}
+
+ul, ol {
+  margin:0;
+  -webkit-margin-before: 0;
+  -webkit-margin-after: 0;
+  -webkit-margin-start: 0;
+  -webkit-margin-end: 0;
+  -webkit-padding-start: 0;
+  list-style-type: none;
+}
+
+img {
+  margin: 5px;
+  border: 2px solid black;
+  vertical-align: middle;
+  width: 75px;
+  height: 75px;
+}
+
+li {
+  padding:5px;
+  cursor: pointer;
+  border-bottom: 1px solid #999;
+  border-left: 20px solid transparent;
+}
+
+.running {
+  border-left-color: $running-color;
+}
+
+.success, .fixed {
+  border-left-color: $success-color;
+}
+
+.failed {
+  border-left-color: $failed-color;
+}
+
+.cannelled, .retried {
+  border-left-color: $stopped-color;
+}
+
