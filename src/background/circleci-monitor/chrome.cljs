@@ -7,4 +7,5 @@
 (defn set-badge-text [text]
   (. browser-action (setBadgeText (js-obj "text" text))))
 
-
+(defn open [url]
+  (js/chrome.tabs.create (js-obj "url" url)))

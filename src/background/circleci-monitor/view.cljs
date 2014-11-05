@@ -1,7 +1,10 @@
 (ns circleci-monitor.view
   (:require [om.core :as om :include-macros true]
             [om.dom :as dom :include-macros true]
+            [circleci-monitor.chrome :as chrome]
             [circleci-monitor.state :as state]))
+(defn branch-url [branch]
+  (str "https://circleci.com/gh/" (:username branch) "/" (:reponame branch)))
 
 (defn contact-view [app owner]
   (reify
@@ -9,7 +12,9 @@
     (render [this]
       (apply dom/ul nil
         (map (fn [branch]
-          (dom/li nil (:branch-name branch)))
+          (let [url (branch-url branch)]
+            (dom/li #js {:onClick #(chrome/open url)}
+                    (:branch-name branch))))
         (:current-branches app))))))
 
 (defn ^:export start-popup [root-node]
