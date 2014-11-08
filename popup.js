@@ -49,10 +49,29 @@ ErrorView = Marionette.ItemView.extend({
 
 });
 
+ProjectView = Marionette.ItemView.extend({
+  template: function(data) {
+    return "<div>" + data.reponame + "</div><div class='branches'></div>"
+  },
+
+  onRender: function() {
+    this.branches = new BranchesView({ collection: this.model.get('branches')});
+    this.$('.branches').append(this.branches.render().el);
+  },
+  onDestroy: function() {
+    this.branches && this.branches.destroy();
+  }
+});
+
+
+ProjectsView = Marionette.CollectionView.extend({
+  tagName: 'div',
+  itemView: ProjectView,
+});
+
 $(function () {
   if (CircleciMonitor.user.isLoaded()) {
-    CircleciMonitor.branches.sort();
-    $('#branches').append(new BranchesView({ collection: CircleciMonitor.branches }).render().el);
+    $('#branches').append(new ProjectsView({ collection: CircleciMonitor.projects }).render().el);
   } else {
     $('#branches').append(new ErrorView().render().el);
   }

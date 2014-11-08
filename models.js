@@ -6,6 +6,63 @@ User = Backbone.Model.extend({
   }
 });
 
+Project = Backbone.Model.extend({
+  initialize: function(attributes, options) {
+    this.user = options.user || (this.collection && this.collection.user)
+    this.set('branches', new Branches(_.select(this.get('branches'), this.branchesThatMatter, this), { user: options.user }));
+  },
+
+  branchesThatMatter: function(branch) {
+    var username = this.user.get('login');
+    return branch.name == 'master' || _.contains(branch.pusher_logins, username);
+  },
+
+});
+
+Projects = Backbone.Collection.extend({
+  model: Project,
+
+  url: function() {
+    return 'https://circleci.com/api/v1/projects';
+  },
+
+  initialize: function(models, options) {
+    this.user = options.user;
+  },
+
+  parse: function(response) {
+    return _.map(response, function(project) {
+      var projectUrl = extractUrl(project);
+      return {
+        username: project.username,
+        reponame: project.reponame,
+        branches: _.map(project.branches, function(v, k) {
+          v.name = k;
+          v.projectUrl = projectUrl;
+          return v;
+        })
+      };
+    });
+  },
+
+  focusedBuild: function() {
+    return this.reduce(function(newestBuild, project) {
+      newBuild = project.get('branches').focusedBuild();
+      if (newestBuild === null ||
+          Date.parse(newestBuild.recentBuild().added_at) < Date.parse(newBuild.recentBuild().added_at)) {
+        return newBuild;
+      }
+      return newestBuild;
+    }, null);
+  },
+
+  branchCount: function() {
+    return this.reduce(function(count, project) {
+      return count + project.get('branches').branchCount();
+    }, 0);
+  }
+});
+
 Branch = Backbone.Model.extend({
   buildUrl: function() {
     return 'https://circleci.com/gh/' + this.get('projectUrl') + '/' + this.recentBuildNumber();
@@ -40,6 +97,7 @@ Branch = Backbone.Model.extend({
 
 Branches = Backbone.Collection.extend({
   model: Branch,
+
   comparator: function(branch) {
     return branch.branchOrder();
   },
@@ -58,7 +116,8 @@ Branches = Backbone.Collection.extend({
 
   focusedBuild: function() {
     return this.reduce(function(newestBuild, build) {
-      if (newestBuild === null || Date.parse(newestBuild.recentBuild().added_at) < Date.parse(build.recentBuild().added_at)) {
+      if (newestBuild === null ||
+        Date.parse(newestBuild.recentBuild().added_at) < Date.parse(build.recentBuild().added_at)) {
         return build;
       }
       return newestBuild;
