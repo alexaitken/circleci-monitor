@@ -20,20 +20,23 @@ Project = Backbone.Model.extend({
     return branch.name == 'master' || _.contains(branch.pusher_logins, username);
   },
 
+  fullName: function() {
+    return this.get('username') + '/' + this.get('reponame');
+  }
 });
 
 Projects = Backbone.Collection.extend({
   model: Project,
-
-  url: function() {
-    return 'https://circleci.com/api/v1/projects';
-  },
+  url: 'https://circleci.com/api/v1/projects',
 
   initialize: function(models, options) {
     var selectable = new Backbone.Picky.SingleSelect();
     _.extend(this, selectable);
 
     this.user = options.user;
+
+    this.listenTo(this, "reset", this.reselect);
+    this.listenTo(this, "select:one", this.storeSelection);
   },
 
   parse: function(response) {
@@ -68,8 +71,21 @@ Projects = Backbone.Collection.extend({
     }, 0);
   },
 
-  newestFeatureBranchProject: function() {
-    return this.first();
+  findProjectByName: function(name) {
+    return _.first(this.filter(function(project) {
+      return project.fullName() === name;
+    }));
+  },
+
+  storeSelection: function(model) {
+    this.currentSelection = model.fullName();
+  },
+
+  reselect: function() {
+    var selection = this.findProjectByName(this.currentSelection);
+    if (selection) {
+      selection.select();
+    }
   }
 });
 
@@ -133,6 +149,34 @@ Branches = Backbone.Collection.extend({
 
   branchCount: function() {
     return this.featureBranches().length;
+  }
+});
+
+RecentBuild = Backbone.Model.extend({
+});
+
+RecentBuilds = Backbone.Collection.extend({
+  model: RecentBuild,
+  url: 'https://circleci.com/api/v1/recent-builds',
+
+  initialize: function(models, options) {
+    this.user = options.user;
+  },
+
+  recentStatus: function() {
+    return this.first().get('status');
+  },
+
+  recentProject: function() {
+    if (!this.first()) { return null; }
+
+    return this.first().get('username') + '/' + this.first().get('reponame');
+  },
+
+  parse: function(response) {
+    return response.filter(function(build) {
+      return (build.user && build.user.login === this.user.get('login') && build.branch !== 'master');
+    }.bind(this));
   }
 });
 

@@ -118,7 +118,8 @@ ProjectTabView = Marionette.ItemView.extend({
 
   removeActive: function() {
     this.$el.removeClass('active');
-  }
+  },
+
 });
 
 ProjectTabsView = Marionette.CollectionView.extend({
@@ -131,7 +132,8 @@ ProjectTabsView = Marionette.CollectionView.extend({
 
 $(function () {
   if (CircleciMonitor.user.isLoaded()) {
-    CircleciMonitor.projects.newestFeatureBranchProject().select();
+    var recentProject = CircleciMonitor.projects.findProjectByName(CircleciMonitor.recentBuilds.recentProject()) || CircleciMonitor.projects.first();
+    recentProject.select();
     $('#project-tabs').append(new ProjectTabsView({ collection: CircleciMonitor.projects }).render().el);
     $('#branches').append(new ProjectsView({ collection: CircleciMonitor.projects }).render().el);
   } else {

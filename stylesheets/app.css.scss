@@ -30,22 +30,26 @@ img {
 }
 
 #project-tabs {
+  padding-top: 5px;
+
   ul {
-    border-bottom: 1px solid #999;
+    border-bottom: 1px solid #aaa;
     padding: 0 5px;
   }
 
   li {
     display: inline-block;
+    cursor: pointer;
     padding: 3px;
-    border: 1px solid #999;
-    border-radius: 1px;
+    border: 1px solid #aaa;
+    border-radius: 5px 5px 0 0 ;
     border-bottom: none;
     background-color: #eee;
     overflow: visible;
     &.active {
       background-color: #fff;
       position: relative;
+      padding-top: 4px;
       top: 1px;
     }
   }
