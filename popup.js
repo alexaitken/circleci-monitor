@@ -104,8 +104,9 @@ ProjectTabView = Marionette.ItemView.extend({
 
     return names.join(' ');
   },
+
   template: function(data) {
-    return data.reponame;
+    return '<span title="' + data.fullName + '">' + data.reponame + '</span>';
   },
 
   selectProject: function() {
@@ -120,6 +121,11 @@ ProjectTabView = Marionette.ItemView.extend({
     this.$el.removeClass('active');
   },
 
+  serializeData: function() {
+    var data = this.model.toJSON();
+    data.fullName = this.model.fullName();
+    return data;
+  }
 });
 
 ProjectTabsView = Marionette.CollectionView.extend({
