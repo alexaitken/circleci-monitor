@@ -9,9 +9,6 @@ var CircleciMonitor = {
 
   start: function() {
     this.user = new User();
-    this.branches = new Branches([], {
-      user: this.user
-    });
 
     this.projects = new Projects([], {
       user: this.user
@@ -20,7 +17,6 @@ var CircleciMonitor = {
     this.projects.on('reset', this.showProjects, this);
     this.projects.on('error', this.delayReload, this);
 
-    this.user.on('change', function() { this.branches.fetch({reset: true}); }, this);
     this.user.on('change', function() { this.projects.fetch({reset: true}); }, this);
 
     this.user.on('error', function() {
@@ -54,7 +50,7 @@ var CircleciMonitor = {
   },
 
   delayReload: function() {
-    _.delay(this.projects.fetch.bind(this.branches, { reset: true }), 30000);
+    _.delay(this.projects.fetch.bind(this.projects, { reset: true }), 30000);
   }
 };
 

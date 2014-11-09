@@ -20,6 +20,7 @@
       "vendor/zepto.js",
       "vendor/underscore.js",
       "vendor/backbone.js",
+      "vendor/backbone.picky.js",
       "models.js",
       "app.js"
     ]

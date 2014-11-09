@@ -6,6 +6,7 @@ $failed-color: #c13737;
 html { margin:0; }
 body {
   margin:0;
+  font-size: 15px;
   min-width: 357px;
   overflow-x: hidden;
 }
@@ -28,26 +29,65 @@ img {
   height: 75px;
 }
 
-li {
-  padding:5px;
-  cursor: pointer;
-  border-bottom: 1px solid #999;
-  border-left: 20px solid transparent;
+#project-tabs {
+  ul {
+    border-bottom: 1px solid #999;
+    padding: 0 5px;
+  }
+
+  li {
+    display: inline-block;
+    padding: 3px;
+    border: 1px solid #999;
+    border-radius: 1px;
+    border-bottom: none;
+    background-color: #eee;
+    overflow: visible;
+    &.active {
+      background-color: #fff;
+      position: relative;
+      top: 1px;
+    }
+  }
 }
 
-.running {
-  border-left-color: $running-color;
-}
+#branches {
+  .branches-body {
+    display: none;
+    &.active {
+      display: block;
+    }
+  }
 
-.success, .fixed {
-  border-left-color: $success-color;
-}
+  li {
+    padding:5px;
+    cursor: pointer;
+    border-bottom: 1px solid #999;
+    &::before {
+      content: '\25C9';
+      padding-right: 5px;
+    }
+  }
 
-.failed {
-  border-left-color: $failed-color;
-}
+  .running {
+    color: $running-color;
+    &::before {
+      content: '\25EF';
+    }
+  }
 
-.cannelled, .retried {
-  border-left-color: $stopped-color;
-}
+  .success, .fixed {
+    color: $success-color;
+  }
 
+  .failed {
+    color: $failed-color;
+  }
+
+  .canceled, .retried {
+    color: $stopped-color;
+    &::before {
+      content: '-';
+    }
+  }
+}
