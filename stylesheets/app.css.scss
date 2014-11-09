@@ -46,6 +46,7 @@ img {
     border-bottom: none;
     background-color: #eee;
     overflow: visible;
+    margin-right: 1px;
     &.active {
       background-color: #fff;
       position: relative;
@@ -58,6 +59,7 @@ img {
 #branches {
   .branches-body {
     display: none;
+    margin-top: 5px;
     &.active {
       display: block;
     }
@@ -68,7 +70,6 @@ img {
     cursor: pointer;
     border-bottom: 1px solid #999;
     &::before {
-      content: '\25C9';
       padding-right: 5px;
     }
   }
@@ -82,10 +83,16 @@ img {
 
   .success, .fixed {
     color: $success-color;
+    &::before {
+      content: '\25C9';
+    }
   }
 
   .failed {
     color: $failed-color;
+    &::before {
+      content: '\2A02';
+    }
   }
 
   .canceled, .retried {
