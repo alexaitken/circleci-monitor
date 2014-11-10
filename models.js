@@ -157,7 +157,7 @@ RecentBuild = Backbone.Model.extend({
 
 RecentBuilds = Backbone.Collection.extend({
   model: RecentBuild,
-  url: 'https://circleci.com/api/v1/recent-builds',
+  url: 'https://circleci.com/api/v1/recent-builds?limit=50',
 
   initialize: function(models, options) {
     this.user = options.user;
