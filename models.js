@@ -164,6 +164,7 @@ RecentBuilds = Backbone.Collection.extend({
   },
 
   recentStatus: function() {
+    if (!this.first()) { return null; }
     return this.first().get('status');
   },
 
