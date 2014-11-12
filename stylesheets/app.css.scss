@@ -1,14 +1,27 @@
+@import url("http://fonts.googleapis.com/css?family=Roboto");
+
 $success-color: #229922;
 $running-color: #3a87ad;
 $stopped-color: #898989;
 $failed-color: #c13737;
 
+* {
+  box-sizing: border-box;
+}
+
 html { margin:0; }
 body {
   margin:0;
   font-size: 15px;
-  min-width: 450px;
+  width: 600px;
   overflow-x: hidden;
+  font-family: 'Roboto', sans-serif;
+  background-image: linear-gradient(#eee, #eee);
+  background: {
+    size: 200px 100%;
+    repeat: no-repeat;
+    color: #fff;
+  }
 }
 
 ul, ol {
@@ -31,48 +44,42 @@ img {
 
 #project-tabs {
   float: left;
-  width: 120px;
+  width: 200px;
 
   ul {
-    border-right: 1px solid #aaa;
-    padding: 5px 0;
+    padding: 10px 0 10px 10px;
   }
 
   li {
     cursor: pointer;
-    padding: 8px;
-    padding-right: 3px;
+    padding: 15px 5px 15px 20px;
     overflow: hidden;
-    margin-bottom: 3px;
-    text-decoration: underline;
+    color: #777;
     &.active {
-      text-decoration: none;
-      border: 1px solid #aaa;
-      border-right: none;
-      border-radius: 5px 0 0 5px ;
       background-color: #fff;
-      position: relative;
-      padding-left: 9px;
-      left: 1px;
+      color: #555;
+      border-left: 3px solid #ccc;
     }
   }
 }
 
 #branches {
-  float:right;
-  width: 325px;
+  float:left;
+  width: 400px;
+  background-color: #fff;
+  padding: 10px 0;
+  position: relative;
+
   .branches-body {
     display: none;
-    margin-top: 5px;
     &.active {
       display: block;
     }
   }
 
   li {
-    padding:5px;
+    padding:8px 20px;
     cursor: pointer;
-    border-bottom: 1px solid #999;
     &::before {
       padding-right: 5px;
     }
