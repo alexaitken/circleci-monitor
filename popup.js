@@ -138,7 +138,7 @@ ProjectTabsView = Marionette.CollectionView.extend({
 
 $(function () {
   if (CircleciMonitor.user.isLoaded()) {
-    var recentProject = CircleciMonitor.projects.findProjectByName(CircleciMonitor.recentBuilds.recentProject()) || CircleciMonitor.projects.first();
+    var recentProject = CircleciMonitor.projects.focusedProject();
     recentProject.select();
     $('#project-tabs').append(new ProjectTabsView({ collection: CircleciMonitor.projects }).render().el);
     $('#branches').append(new ProjectsView({ collection: CircleciMonitor.projects }).render().el);

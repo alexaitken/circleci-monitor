@@ -14,13 +14,8 @@ var CircleciMonitor = {
       user: this.user
     });
 
-    this.recentBuilds = new RecentBuilds([], {
-      user: this.user
-    });
-
-    this.recentBuilds.on('reset', this.showBuildStatus, this);
     this.projects.on('reset', this.showProjects, this);
-    this.projects.on('reset', function() { this.recentBuilds.fetch({reset: true}); }, this);
+    this.projects.on('reset', this.delayReload, this);
     this.projects.on('error', this.delayReload, this);
 
     this.user.on('change', function() { this.projects.fetch({reset: true}); }, this);
@@ -43,17 +38,18 @@ var CircleciMonitor = {
 
   showProjects: function() {
     chrome.browserAction.setBadgeText({ text: '' + this.projects.branchCount() });
-    this.delayReload();
-  },
 
-  showBuildStatus: function() {
-    var iconName = this.icons[this.recentBuilds.recentStatus()] || this.icons.other;
+    var iconName = this.icons[this.projects.focusedBuild().status()] || this.icons.other;
     chrome.browserAction.setIcon({
       path: {
         '19':'images/' + iconName + '-19.png',
         '38':'images/' + iconName + '-38.png'
       }
     });
+  },
+
+  showBuildStatus: function() {
+    var iconName = this.icons[this.branches.focusedBuild().status()] || this.icons.other;
   },
 
   delayReload: function() {

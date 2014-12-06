@@ -77,6 +77,10 @@ Projects = Backbone.Collection.extend({
     }));
   },
 
+  focusedProject: function() {
+    return this.findProjectByName(this.focusedBuild().get('projectUrl'));
+  },
+
   storeSelection: function(model) {
     this.currentSelection = model.fullName();
   },
@@ -112,7 +116,7 @@ Branch = Backbone.Model.extend({
   },
 
   branchOrder: function() {
-    return -this.recentBuildNumber();
+    return parseInt('-' + this.recentBuildNumber());
   },
 
   status: function() {
@@ -152,34 +156,6 @@ Branches = Backbone.Collection.extend({
   }
 });
 
-RecentBuild = Backbone.Model.extend({
-});
-
-RecentBuilds = Backbone.Collection.extend({
-  model: RecentBuild,
-  url: 'https://circleci.com/api/v1/recent-builds?limit=50',
-
-  initialize: function(models, options) {
-    this.user = options.user;
-  },
-
-  recentStatus: function() {
-    if (!this.first()) { return null; }
-    return this.first().get('status');
-  },
-
-  recentProject: function() {
-    if (!this.first()) { return null; }
-
-    return this.first().get('username') + '/' + this.first().get('reponame');
-  },
-
-  parse: function(response) {
-    return response.filter(function(build) {
-      return (build.user && build.user.login === this.user.get('login') && build.branch !== 'master');
-    }.bind(this));
-  }
-});
 
 function extractUrl(project) {
   return _.last(project.vcs_url.split('/'), 2).join('/');
