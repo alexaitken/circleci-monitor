@@ -5,13 +5,12 @@ BranchView = Marionette.ItemView.extend({
   className: function() {
     return this.model.recentBuild().status;
   },
-
   events: {
     'click': 'openBuild'
   },
 
   template: function(data) {
-    return data.projectUrl + '<br/>' + decodeURIComponent(data.name);
+    return decodeURIComponent(data.name);
   },
 
   openBuild: function(e) {
@@ -49,10 +48,100 @@ ErrorView = Marionette.ItemView.extend({
 
 });
 
+ProjectView = Marionette.ItemView.extend({
+  className: function() {
+    var names = ['branches-body'];
+
+    if (this.model.selected) {
+      names.push('active');
+    }
+
+    return names.join(' ');
+  },
+  template: function(data) {
+    return "<div class='branches'></div>"
+  },
+  modelEvents: {
+    'selected': 'addActive',
+    'deselected': 'removeActive'
+  },
+
+  onRender: function() {
+    this.branches = new BranchesView({ collection: this.model.get('branches')});
+    this.$('.branches').append(this.branches.render().el);
+  },
+  onDestroy: function() {
+    this.branches && this.branches.destroy();
+  },
+
+  addActive: function() {
+    this.$el.addClass('active');
+  },
+
+  removeActive: function() {
+    this.$el.removeClass('active');
+  }
+});
+
+ProjectsView = Marionette.CollectionView.extend({
+  tagName: 'div',
+  itemView: ProjectView,
+});
+
+ProjectTabView = Marionette.ItemView.extend({
+  tagName: 'li',
+  events: { 'click': 'selectProject' },
+  modelEvents: {
+    'selected': 'addActive',
+    'deselected': 'removeActive'
+  },
+  className: function() {
+    var names = ['project-tab'];
+
+    if (this.model.selected) {
+      names.push('active');
+    }
+
+    return names.join(' ');
+  },
+
+  template: function(data) {
+    return '<span title="' + data.fullName + '">' + data.reponame + '</span>';
+  },
+
+  selectProject: function() {
+    this.model.select();
+  },
+
+  addActive: function() {
+    this.$el.addClass('active');
+  },
+
+  removeActive: function() {
+    this.$el.removeClass('active');
+  },
+
+  serializeData: function() {
+    var data = this.model.toJSON();
+    data.fullName = this.model.fullName();
+    return data;
+  }
+});
+
+ProjectTabsView = Marionette.CollectionView.extend({
+  tagName: 'ul',
+  itemView: ProjectTabView,
+  modelEvents: {
+    'select:one': 'render'
+  }
+});
+
 $(function () {
   if (CircleciMonitor.user.isLoaded()) {
-    CircleciMonitor.branches.sort();
-    $('#branches').append(new BranchesView({ collection: CircleciMonitor.branches }).render().el);
+    var recentProject = CircleciMonitor.projects.focusedProject();
+    recentProject.select();
+    $('#project-tabs').append(new ProjectTabsView({ collection: CircleciMonitor.projects }).render().el);
+    $('#branches').append(new ProjectsView({ collection: CircleciMonitor.projects }).render().el);
   } else {
     $('#branches').append(new ErrorView().render().el);
   }

@@ -9,14 +9,16 @@ var CircleciMonitor = {
 
   start: function() {
     this.user = new User();
-    this.branches = new Branches([], {
+
+    this.projects = new Projects([], {
       user: this.user
     });
 
-    this.branches.on('reset', this.showProjects, this);
-    this.branches.on('error', this.delayReload, this);
+    this.projects.on('reset', this.showProjects, this);
+    this.projects.on('reset', this.delayReload, this);
+    this.projects.on('error', this.delayReload, this);
 
-    this.user.on('change', function() { this.branches.fetch({reset: true}); }, this);
+    this.user.on('change', function() { this.projects.fetch({reset: true}); }, this);
 
     this.user.on('error', function() {
       chrome.browserAction.setIcon({
@@ -35,21 +37,23 @@ var CircleciMonitor = {
   },
 
   showProjects: function() {
-    chrome.browserAction.setBadgeText({ text: '' + this.branches.branchCount() });
+    chrome.browserAction.setBadgeText({ text: '' + this.projects.branchCount() });
 
-    var iconName = this.icons[this.branches.focusedBuild().status()] || this.icons.other;
+    var iconName = this.icons[this.projects.focusedBuild().status()] || this.icons.other;
     chrome.browserAction.setIcon({
       path: {
         '19':'images/' + iconName + '-19.png',
         '38':'images/' + iconName + '-38.png'
       }
     });
+  },
 
-    this.delayReload();
+  showBuildStatus: function() {
+    var iconName = this.icons[this.branches.focusedBuild().status()] || this.icons.other;
   },
 
   delayReload: function() {
-    _.delay(this.branches.fetch.bind(this.branches, { reset: true }), 30000);
+    _.delay(this.projects.fetch.bind(this.projects, { reset: true }), 30000);
   }
 };
 

@@ -1,13 +1,27 @@
+@import url("http://fonts.googleapis.com/css?family=Roboto");
+
 $success-color: #229922;
 $running-color: #3a87ad;
 $stopped-color: #898989;
 $failed-color: #c13737;
 
+* {
+  box-sizing: border-box;
+}
+
 html { margin:0; }
 body {
   margin:0;
-  min-width: 357px;
+  font-size: 15px;
+  width: 600px;
   overflow-x: hidden;
+  font-family: 'Roboto', sans-serif;
+  background-image: linear-gradient(#eee, #eee);
+  background: {
+    size: 200px 100%;
+    repeat: no-repeat;
+    color: #fff;
+  }
 }
 
 ul, ol {
@@ -28,26 +42,74 @@ img {
   height: 75px;
 }
 
-li {
-  padding:5px;
-  cursor: pointer;
-  border-bottom: 1px solid #999;
-  border-left: 20px solid transparent;
+#project-tabs {
+  float: left;
+  width: 200px;
+
+  ul {
+    padding: 10px 0 10px 10px;
+  }
+
+  li {
+    cursor: pointer;
+    padding: 15px 5px 15px 20px;
+    overflow: hidden;
+    color: #777;
+    &.active {
+      background-color: #fff;
+      color: #555;
+      border-left: 3px solid #ccc;
+    }
+  }
 }
 
-.running {
-  border-left-color: $running-color;
-}
+#branches {
+  float:left;
+  width: 400px;
+  background-color: #fff;
+  padding: 10px 0;
+  position: relative;
 
-.success, .fixed {
-  border-left-color: $success-color;
-}
+  .branches-body {
+    display: none;
+    &.active {
+      display: block;
+    }
+  }
 
-.failed {
-  border-left-color: $failed-color;
-}
+  li {
+    padding:8px 20px;
+    cursor: pointer;
+    &::before {
+      padding-right: 5px;
+    }
+  }
 
-.cannelled, .retried {
-  border-left-color: $stopped-color;
-}
+  .running {
+    color: $running-color;
+    &::before {
+      content: '\25EF';
+    }
+  }
 
+  .success, .fixed {
+    color: $success-color;
+    &::before {
+      content: '\25C9';
+    }
+  }
+
+  .failed {
+    color: $failed-color;
+    &::before {
+      content: '\2A02';
+    }
+  }
+
+  .canceled, .retried {
+    color: $stopped-color;
+    &::before {
+      content: '-';
+    }
+  }
+}

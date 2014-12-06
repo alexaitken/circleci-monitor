@@ -6,6 +6,93 @@ User = Backbone.Model.extend({
   }
 });
 
+Project = Backbone.Model.extend({
+  initialize: function(attributes, options) {
+    var selectable = new Backbone.Picky.Selectable(this);
+    _.extend(this, selectable);
+
+    this.user = options.user || (this.collection && this.collection.user)
+    this.set('branches', new Branches(_.select(this.get('branches'), this.branchesThatMatter, this), { user: options.user }));
+  },
+
+  branchesThatMatter: function(branch) {
+    var username = this.user.get('login');
+    return branch.name == 'master' || _.contains(branch.pusher_logins, username);
+  },
+
+  fullName: function() {
+    return this.get('username') + '/' + this.get('reponame');
+  }
+});
+
+Projects = Backbone.Collection.extend({
+  model: Project,
+  url: 'https://circleci.com/api/v1/projects',
+
+  initialize: function(models, options) {
+    var selectable = new Backbone.Picky.SingleSelect();
+    _.extend(this, selectable);
+
+    this.user = options.user;
+
+    this.listenTo(this, "reset", this.reselect);
+    this.listenTo(this, "select:one", this.storeSelection);
+  },
+
+  parse: function(response) {
+    return _.map(response, function(project) {
+      var projectUrl = extractUrl(project);
+      return {
+        username: project.username,
+        reponame: project.reponame,
+        branches: _.map(project.branches, function(v, k) {
+          v.name = k;
+          v.projectUrl = projectUrl;
+          return v;
+        })
+      };
+    });
+  },
+
+  focusedBuild: function() {
+    return this.reduce(function(newestBuild, project) {
+      var newBuild = project.get('branches').focusedBuild();
+      if (newestBuild === null ||
+          Date.parse(newestBuild.recentBuild().added_at) < Date.parse(newBuild.recentBuild().added_at)) {
+        return newBuild;
+      }
+      return newestBuild;
+    }, null);
+  },
+
+  branchCount: function() {
+    return this.reduce(function(count, project) {
+      return count + project.get('branches').branchCount();
+    }, 0);
+  },
+
+  findProjectByName: function(name) {
+    return _.first(this.filter(function(project) {
+      return project.fullName() === name;
+    }));
+  },
+
+  focusedProject: function() {
+    return this.findProjectByName(this.focusedBuild().get('projectUrl'));
+  },
+
+  storeSelection: function(model) {
+    this.currentSelection = model.fullName();
+  },
+
+  reselect: function() {
+    var selection = this.findProjectByName(this.currentSelection);
+    if (selection) {
+      selection.select();
+    }
+  }
+});
+
 Branch = Backbone.Model.extend({
   buildUrl: function() {
     return 'https://circleci.com/gh/' + this.get('projectUrl') + '/' + this.recentBuildNumber();
@@ -29,7 +116,7 @@ Branch = Backbone.Model.extend({
   },
 
   branchOrder: function() {
-    return this.get('projectUrl') + '_' + this.recentBuildNumber();
+    return parseInt('-' + this.recentBuildNumber());
   },
 
   status: function() {
@@ -37,64 +124,39 @@ Branch = Backbone.Model.extend({
   }
 });
 
-
 Branches = Backbone.Collection.extend({
   model: Branch,
+
   comparator: function(branch) {
     return branch.branchOrder();
-  },
-
-  url: function() {
-    return 'https://circleci.com/api/v1/projects';
   },
 
   initialize: function(models, options) {
     this.user = options.user;
   },
 
-  parse: function(response) {
-    return _.select(this.extractBranches(response), this.branchesThatMatter, this);
-  },
-
   focusedBuild: function() {
     return this.reduce(function(newestBuild, build) {
-      if (newestBuild === null || Date.parse(newestBuild.recentBuild().added_at) < Date.parse(build.recentBuild().added_at)) {
+      if (newestBuild === null ||
+        Date.parse(newestBuild.recentBuild().added_at) < Date.parse(build.recentBuild().added_at)) {
         return build;
       }
       return newestBuild;
     }, null);
   },
 
-  extractBranches: function(response) {
-    return _.flatten(_.map(response, function(project) {
-      var projectUrl = extractUrl(project);
-      return _.map(project.branches, function(v, k) {
-        v.name = k;
-        v.projectUrl = projectUrl;
-        return v;
-      });
-    }));
-  },
-
-  branchesThatMatter: function(branch) {
-    var username = this.user.get('login');
-    return branch.name == 'master' || _.contains(branch.pusher_logins, username);
+  featureBranches: function() {
+    return this.reject(function(branch) {
+      return branch.get('name') === 'master';
+    });
   },
 
   branchCount: function() {
-    return this.reduce(function(count, build) {
-      if (build.get('name') === 'master') {
-        return count;
-      } else {
-        return count + 1;
-      }
-    }, 0);
+    return this.featureBranches().length;
   }
-
 });
 
 
 function extractUrl(project) {
   return _.last(project.vcs_url.split('/'), 2).join('/');
 }
-
