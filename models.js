@@ -8,8 +8,7 @@ User = Backbone.Model.extend({
 
 Project = Backbone.Model.extend({
   initialize: function(attributes, options) {
-    var selectable = new Backbone.Picky.Selectable(this);
-    _.extend(this, selectable);
+    Backbone.Select.Me.applyTo(this);
 
     this.user = options.user || (this.collection && this.collection.user)
     this.set('branches', new Branches(_.select(this.get('branches'), this.branchesThatMatter, this), { user: options.user }));
@@ -30,13 +29,8 @@ Projects = Backbone.Collection.extend({
   url: 'https://circleci.com/api/v1/projects',
 
   initialize: function(models, options) {
-    var selectable = new Backbone.Picky.SingleSelect();
-    _.extend(this, selectable);
-
+    Backbone.Select.One.applyTo(this, models, options);
     this.user = options.user;
-
-    this.listenTo(this, "reset", this.reselect);
-    this.listenTo(this, "select:one", this.storeSelection);
   },
 
   parse: function(response) {

@@ -1,4 +1,6 @@
 var CircleciMonitor = {
+  _views: [],
+
   icons: {
     success: 'green',
     fixed: 'green',
@@ -54,7 +56,34 @@ var CircleciMonitor = {
 
   delayReload: function() {
     _.delay(this.projects.fetch.bind(this.projects, { reset: true }), 30000);
+  },
+
+  registerViews: function() {
+    _.each(arguments, function(view) { this._views.push(view); }, this);
+  },
+
+  cleanViews: function() {
+    _.each(this._views, function(view) {
+      view.close();
+    });
+    this._views = [];
+  },
+
+  registerAndRender: function(view, domElement) {
+    CircleciMonitor.registerViews(view);
+    $(domElement).append(view.render().el);
+  },
+
+  startView: function(doc) {
+    if (CircleciMonitor.user.isLoaded()) {
+      var recentProject = CircleciMonitor.projects.focusedProject();
+      recentProject.select();
+
+      CircleciMonitor.registerAndRender(new CircleciMonitor.ProjectTabsView({ collection: CircleciMonitor.projects }), doc.getElementById('project-tabs'));
+      CircleciMonitor.registerAndRender(new CircleciMonitor.ProjectsView({ collection: CircleciMonitor.projects }), doc.getElementById('branches'));
+
+    } else {
+      CircleciMonitor.registerAndRender(new CircleciMonitor.ErrorView(), doc.getElementById('branches'));
+    }
   }
 };
-
-CircleciMonitor.start();

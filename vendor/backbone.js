@@ -1090,6 +1090,7 @@
     // Backbone views attached to the same DOM element.
     undelegateEvents: function() {
       this.$el.off('.delegateEvents' + this.cid);
+      console.log('remove events for ' + this.cid);
       return this;
     },
 

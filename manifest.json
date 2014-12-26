@@ -20,9 +20,12 @@
       "vendor/zepto.js",
       "vendor/underscore.js",
       "vendor/backbone.js",
-      "vendor/backbone.picky.js",
+      "vendor/backbone.select.js",
+      "vendor/backbone.marionette.js",
+      "app.js",
       "models.js",
-      "app.js"
+      "views.js",
+      "bootstrap.js"
     ]
   },
   "permissions": [
