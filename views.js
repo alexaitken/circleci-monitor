@@ -45,8 +45,8 @@ CircleciMonitor.BranchesView = Marionette.CollectionView.extend({
 
 CircleciMonitor.ErrorView = Marionette.ItemView.extend({
   events: {
-    '#retry-authentication click': 'retryAuth',
-    '#login-to-circleci click': 'openCircle'
+    'click #retry-authentication': 'retryAuth',
+    'click #login-to-circleci': 'openCircle'
   },
 
   onClose: function() {
