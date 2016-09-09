@@ -39,7 +39,7 @@ var CircleciMonitor = {
   },
 
   showProjects: function() {
-    chrome.browserAction.setBadgeText({ text: '' + this.projects.branchCount() });
+    chrome.browserAction.setBadgeText({ text: '' + this.badgeCount() });
 
     var iconName = this.icons[this.projects.focusedBuild().status()] || this.icons.other;
     chrome.browserAction.setIcon({
@@ -48,6 +48,13 @@ var CircleciMonitor = {
         '38':'images/' + iconName + '-38.png'
       }
     });
+  },
+
+  badgeCount: function() {
+    if(this.projects.branchCount() == 0) {
+      return '';
+    }
+    return this.projects.branchCount();
   },
 
   showBuildStatus: function() {
