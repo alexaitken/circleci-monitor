@@ -36,12 +36,14 @@ Projects = Backbone.Collection.extend({
   parse: function(response) {
     return _.map(response, function(project) {
       var projectUrl = extractUrl(project);
+      var vcsRoot = extractVcsRootService(project);
       return {
         username: project.username,
         reponame: project.reponame,
         branches: _.map(project.branches, function(v, k) {
           v.name = k;
           v.projectUrl = projectUrl;
+          v.vcsRoot = vcsRoot;
           return v;
         })
       };
@@ -89,7 +91,7 @@ Projects = Backbone.Collection.extend({
 
 Branch = Backbone.Model.extend({
   buildUrl: function() {
-    return 'https://circleci.com/gh/' + this.get('projectUrl') + '/' + this.recentBuildNumber();
+    return 'https://circleci.com/' + this.get('vcsRoot') + '/' + this.get('projectUrl') + '/' + this.recentBuildNumber();
   },
 
   recentBuildNumber: function() {
@@ -153,4 +155,16 @@ Branches = Backbone.Collection.extend({
 
 function extractUrl(project) {
   return _.last(project.vcs_url.split('/'), 2).join('/');
+}
+
+function extractVcsRootService(project) {
+    var base_vcs_root_url = _.first(project.vcs_url.split('.'), 1);
+    // Default to GitHub
+    var repoType = "gh";
+    if (base_vcs_root_url.indexOf("bitbucket") == -1) {
+      repoType = "bb";
+    }
+    // More root services can be added as `else if`s
+
+    return repoType;
 }
