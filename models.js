@@ -158,10 +158,10 @@ function extractUrl(project) {
 }
 
 function extractVcsRootService(project) {
-    var base_vcs_root_url = _.first(project.vcs_url.split('.'), 1);
+    var base_vcs_root_url = _.first(project.vcs_url.split('.'));
     // Default to GitHub
     var repoType = "gh";
-    if (base_vcs_root_url.indexOf("bitbucket") == -1) {
+    if (base_vcs_root_url.indexOf("bitbucket") != -1) {
       repoType = "bb";
     }
     // More root services can be added as `else if`s
