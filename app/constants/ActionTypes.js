@@ -1,0 +1,4 @@
+export const SELECT_PROJECT = 'SELECT_PROJECT';
+export const LOADING_USER = 'LOADING_USER';
+export const USER_LOADED = 'USER_LOADED';
+export const USER_LOAD_ERROR = 'USER_LOAD_ERROR';

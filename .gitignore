@@ -1,5 +1,15 @@
 node_modules/
-bower_components/
 stylesheets/*.css
 .sass-cache/
 dist
+node_modules
+npm-debug.log
+.DS_Store
+build/
+dev/
+dist/
+*.zip
+*.crx
+*.pem
+update.xml
+yarn-error.log
