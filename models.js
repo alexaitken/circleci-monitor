@@ -53,8 +53,8 @@ Projects = Backbone.Collection.extend({
   focusedBuild: function() {
     return this.reduce(function(newestBuild, project) {
       var newBuild = project.get('branches').focusedBuild();
-      if (newestBuild === null ||
-          Date.parse(newestBuild.recentBuild().added_at) < Date.parse(newBuild.recentBuild().added_at)) {
+      if (newBuild && (newestBuild === null ||
+          Date.parse(newestBuild.recentBuild().added_at) < Date.parse(newBuild.recentBuild().added_at)) ) {
         return newBuild;
       }
       return newestBuild;
