@@ -15,6 +15,16 @@ const actionsMap = {
       selected_project: action.project_name
     };
   },
+  [ActionTypes.PROJECTS_LOADED](state, action) {
+    return {
+      ...state,
+      items: Object.keys(action.payload).map((key) => {
+        return {
+          name: action.payload[key].reponame
+        };
+      })
+    };
+  },
 };
 
 export default function projects(state = initialState, action) {

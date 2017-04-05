@@ -1,4 +1,5 @@
 import { loadUser } from '../../app/actions/user';
+import ProjectUpdater from '../../app/workers/ProjectUpdater';
 const bluebird = require('bluebird');
 
 global.Promise = bluebird;
@@ -27,6 +28,9 @@ promisifyAll(chrome, [
 
 const createStore = require('../../app/store/configureStore');
 const store = createStore();
-debugger;
+
+const updater = new ProjectUpdater(store);
+updater.start();
 
 store.dispatch(loadUser());
+

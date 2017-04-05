@@ -27,4 +27,33 @@ describe('projects reducer', () => {
       selected_project: 'first-project',
     });
   });
+
+  it('updates the project is when projects are loaded', () => {
+    expect(
+      projects({items: []}, {
+        type: types.PROJECTS_LOADED,
+        payload: {
+          0: {
+            reponame: 'first-project',
+          },
+          1: {
+            reponame: 'second-project',
+          },
+          2: {
+            reponame: 'thrid-project',
+          },
+          3: {
+            reponame: 'fourth-project',
+          },
+        }
+      })
+    ).to.eql({
+      items: [
+        { name: 'first-project' },
+        { name: 'second-project' },
+        { name: 'thrid-project' },
+        { name: 'fourth-project' }
+      ]
+    });
+  });
 });
