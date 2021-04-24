@@ -84,7 +84,9 @@ var CircleciMonitor = {
   startView: function(doc) {
     if (CircleciMonitor.user.isLoaded()) {
       var recentProject = CircleciMonitor.projects.focusedProject();
-      recentProject.select();
+      if (recentProject !== null) {
+        recentProject.select();
+      }
 
       CircleciMonitor.registerAndRender(new CircleciMonitor.ProjectTabsView({ collection: CircleciMonitor.projects }), doc.getElementById('project-tabs'));
       CircleciMonitor.registerAndRender(new CircleciMonitor.ProjectsView({ collection: CircleciMonitor.projects }), doc.getElementById('branches'));

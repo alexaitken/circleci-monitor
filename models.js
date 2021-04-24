@@ -51,14 +51,15 @@ Projects = Backbone.Collection.extend({
   },
 
   focusedBuild: function() {
-    return this.reduce(function(newestBuild, project) {
-      var newBuild = project.get('branches').focusedBuild();
-      if (newestBuild === null ||
-          Date.parse(newestBuild.recentBuild().added_at) < Date.parse(newBuild.recentBuild().added_at)) {
-        return newBuild;
-      }
-      return newestBuild;
-    }, null);
+    var target = _.chain(this.map(function(project) {
+      return project.get('branches').focusedBuild();
+    })).reject(function(branch) {
+      return branch === null;
+    }).sortBy(function(branch) {
+      return Date.parse(branch.recentBuild().added_at);
+    }).reverse().first().value();
+
+    return target;
   },
 
   branchCount: function() {
