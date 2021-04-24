@@ -16,7 +16,7 @@ Project = Backbone.Model.extend({
 
   branchesThatMatter: function(branch) {
     var username = this.user.get('login');
-    return branch.name == 'master' || _.contains(branch.pusher_logins, username);
+    return branch.name == this.get('defaultBranch') || _.contains(branch.pusher_logins, username);
   },
 
   fullName: function() {
@@ -40,10 +40,12 @@ Projects = Backbone.Collection.extend({
       return {
         username: project.username,
         reponame: project.reponame,
+        defaultBranch: project.default_branch,
         branches: _.map(project.branches, function(v, k) {
           v.name = k;
           v.projectUrl = projectUrl;
           v.vcsRoot = vcsRoot;
+          v.defaultBranch = project.default_branch;
           return v;
         })
       };
@@ -105,7 +107,7 @@ Branch = Backbone.Model.extend({
     } else {
       result = _.first(this.get('recent_builds'));
     }
-    if (this.get('name') === 'master') {
+    if (this.isDefaultBranch()) {
       result.added_at = new Date(0);
     }
     return result;
@@ -117,6 +119,10 @@ Branch = Backbone.Model.extend({
 
   status: function() {
     return this.recentBuild().status;
+  },
+
+  isDefaultBranch: function() {
+    this.get('name') === this.get('defaultBranch');
   }
 });
 
@@ -143,7 +149,7 @@ Branches = Backbone.Collection.extend({
 
   featureBranches: function() {
     return this.reject(function(branch) {
-      return branch.get('name') === 'master';
+      return branch.isDefaultBranch();
     });
   },
 
