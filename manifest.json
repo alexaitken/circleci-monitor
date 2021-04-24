@@ -29,6 +29,7 @@
     ]
   },
   "permissions": [
-    "https://circleci.com/*"
+    "https://circleci.com/api/v1/me",
+    "https://circleci.com/api/v1/projects"
   ]
 }
