@@ -31,6 +31,10 @@ Projects = Backbone.Collection.extend({
   initialize: function(models, options) {
     Backbone.Select.One.applyTo(this, models, options);
     this.user = options.user;
+
+    console.log("initializing listeners")
+    this.listenTo(this, "reset", this.reselect);
+    this.listenTo(this, "select:one", this.storeSelection);
   },
 
   parse: function(response) {
